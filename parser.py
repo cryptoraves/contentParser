@@ -117,7 +117,7 @@ def parse(text, keyword, launchTerm, inReply):
 		}
 
 	#split string into command candidates
-	textArray=deEmojify(text.lower()).split(keyword)
+	textArray=deEmojify(text).lower().split(keyword)
 
 	msg = {}
 
