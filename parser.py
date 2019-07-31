@@ -20,6 +20,8 @@ import re
 def endOfSentance(word):
 	return word.endswith((".","!","?"))
 
+def deEmojify(inputString):
+    return inputString.encode('ascii', 'ignore').decode('ascii')
 
 def testUsername(str):
 	#strip any non-twitter-legal username characters
@@ -55,9 +57,14 @@ def parseProcess(str, inReply):
 
 	#second argument must be username
 	usernameOne=False
+	sentanceEnd=False
 	if len(arguments) > 1 and arguments[1].startswith('@'):
 		
-		usernameOne=testUsername(arguments[1])
+		if endOfSentance(arguments[1]):
+			usernameOne=testUsername(arguments[1][:-1])
+			sentanceEnd=True
+		else:
+			usernameOne=testUsername(arguments[1])
 
 	if inReply:
 		if usernameOne:
@@ -72,12 +79,16 @@ def parseProcess(str, inReply):
 			  "amount": amount		  
 			}
 
-	#check for third argument that is username
 	usernameTwo=False
-	if len(arguments) > 2 and arguments[2].startswith('@'):	
+	if not sentanceEnd:
+		#check for third argument that is username		
+		if len(arguments) > 2 and arguments[2].startswith('@'):	
+			
+			if endOfSentance(arguments[2]):
+				usernameTwo=testUsername(arguments[2][:-1])
+			else:
+				usernameTwo=testUsername(arguments[2])
 		
-		usernameTwo=testUsername(arguments[2])
-	
 	if usernameOne:
 		if usernameTwo:
 			#command is valid and complete with noReplyWithOBH.
@@ -106,7 +117,7 @@ def parse(text, keyword, launchTerm, inReply):
 		}
 
 	#split string into command candidates
-	textArray=text.lower().split(keyword)
+	textArray=deEmojify(text.lower()).split(keyword)
 
 	msg = {}
 

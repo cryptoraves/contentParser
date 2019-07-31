@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 import parser
 import json
 import sys
@@ -19,7 +19,7 @@ def prettyParse(text, keyword, launchTerm, reply):
 #run it
 if "output" in sys.argv:
 
-	text="@cryptoraves 1,999,888 @saltyBoi @happyBae"
+	text=u"@cryptoraves 1,999,888 @bp84392506😅 @KingJames ! @BarackObama 😆"
 	prettyParse(text, keyword, launchTerm, reply)
 
 else:
@@ -85,6 +85,13 @@ else:
 			print("\n"+sys._getframe().f_code.co_name+": "+text)
 			response=parser.parse(text, keyword, launchTerm, True)
 			self.assertTrue("success" in response and response['success'] and response['results']['amount'] == 1999)
+		#with end of sentance for param 2 -- results in no OBH
+		def test_reply_send_3(self):
+			text="@cryptoraves 1,999,888.51 @saltyBoi. @happyBae does the nay nay"
+			print("\n"+sys._getframe().f_code.co_name+": "+text)
+			response=parser.parse(text, keyword, launchTerm, False)
+			self.assertTrue("success" in response and response['success'] and response['results']['amount'] == 1999889 \
+				and response['results']['userTo'] == '@saltyboi' and 'onBehalfOf' not in response)
 		def test_reply_send_obh_1(self):
 			text="@cryptoraves 1,999,888 @saltyBoi @happyBae"
 			print("\n"+sys._getframe().f_code.co_name+": "+text)
@@ -93,7 +100,26 @@ else:
 				"success" in response and response['success'] and response['results']['amount'] == 1999888 \
 				and response['results']['userTo'] == '@saltyboi' and response['results']['onBehalfOf'] == '@happybae' \
 			)
-	    #def test_sum_tuple(self):
-	    #    self.assertEqual(sum((1, 2, 2)), 6, "Should be 6")
+		#obh with end of sentance
+		def test_reply_send_obh_2(self):
+			text="Smalls. @cryptoraves 1,999,888 @saltyBoi @happyBae! Ridin dirty?"
+			print("\n"+sys._getframe().f_code.co_name+": "+text)
+			response=parser.parse(text, keyword, launchTerm, False)
+			self.assertTrue(
+				"success" in response and response['success'] and response['results']['amount'] == 1999888 \
+				and response['results']['userTo'] == '@saltyboi' and response['results']['onBehalfOf'] == '@happybae' \
+			)
+		#obh with emojis
+		def test_reply_send_obh_4(self):
+			text=u"@cryptoraves 😆80,000.22 @m184392526😅 @KingJames ! @BarackObama 😆"
+			print("\n"+sys._getframe().f_code.co_name+": "+text)
+			response=parser.parse(text, keyword, launchTerm, False)
+			self.assertTrue(
+				"success" in response and response['success'] and response['results']['amount'] == 80000 \
+				and response['results']['userTo'] == '@m184392526' and response['results']['onBehalfOf'] == '@kingjames' \
+			)
+
+
+
 	if __name__ == '__main__':
 		unittest.main()
