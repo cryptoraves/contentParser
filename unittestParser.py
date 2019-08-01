@@ -19,7 +19,7 @@ def prettyParse(text, keyword, launchTerm, reply):
 #run it
 if "output" in sys.argv:
 
-	text=u"@cryptoraves 1,999,888 @bp84392506😅 @KingJames ! @BarackObama 😆"
+	text="@cryptoraves #makeitrave"
 	prettyParse(text, keyword, launchTerm, reply)
 
 else:
@@ -31,28 +31,28 @@ else:
 			text="@cryptoraves #makeitrave"
 			print("\n"+sys._getframe().f_code.co_name+": "+text)
 			response=parser.parse(text, keyword, launchTerm, False)
-			self.assertTrue(response['success'])
+			self.assertTrue(response['success'] and response['launch'])
 
 		#make it rave complexity L2
 		def test_makeitrave_2(self):
 			text="Hey! @cryptoraves #makeitrave"
 			print("\n"+sys._getframe().f_code.co_name+": "+text)
 			response=parser.parse(text, keyword, launchTerm, False)
-			self.assertTrue(response['success'])
+			self.assertTrue(response['success'] and response['launch'])
 
 		#make it rave complexity L3
 		def test_makeitrave_3(self):
 			text="Hey! check out this new dapp called @cryptoraves! tag em and tweet #makeitrave to get yours"
 			print("\n"+sys._getframe().f_code.co_name+": "+text)
 			response=parser.parse(text, keyword, launchTerm, False)
-			self.assertTrue(response['success'])
+			self.assertTrue(response['success'] and response['launch'])
 
 		#make it rave inReplyTo 
 		def test_makeitrave_3(self):
 			text="Have you heard of @cryptoraves? You can again #makeitrave and then send them some of YOUR PERSONAL tokens back to @crytporaves and you thye'll match ya 1 milllioooonn!!!!!!"
 			print("\n"+sys._getframe().f_code.co_name+": "+text+ " -- reply")
 			response=parser.parse(text, keyword, launchTerm, True)
-			self.assertTrue(response['success'])
+			self.assertTrue(response['success'] and response['launch'])
 
 
 		#simple naked send
