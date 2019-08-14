@@ -40,6 +40,10 @@ def parseProcess(str, inReply):
 		#empty string
 		return False;
 
+	#check if starts with digit
+	if not arguments[0][0].isdigit():
+		raise ValueError('Argument not int')
+
 	#check if integer
 	n=re.sub('[^0-9.]+', '', arguments[0])
 
