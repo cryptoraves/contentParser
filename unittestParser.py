@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
-import parser
-import json
-import sys
+import parser, json, sys
 
 keyword="@cryptoraves"
 
-launchTerm="#makeitrave"
+launchTerm="#DropMyCrypto"
 
 #inreply
-reply=True
+reply=False
 
 #send example
 #text="@cryptoraves is the newst coolest dapp in town. You can send your own personal crypto by tweeting: @cryptoraves 100.21. @yourfriend. Or if you're replying, it's simply @cryptoraves 1,000. If NOT replying you can send them like this: @cryptoraves 10 @newfriend"
@@ -19,7 +17,7 @@ def prettyParse(text, keyword, launchTerm, reply):
 #run it
 if "output" in sys.argv:
 
-	text="@carnage1 @cryptoraves @emily"
+	text="asdasda asdadds  asdasdas @cryptoraves #MyCrypto 2123 @vestige asdass"
 	prettyParse(text, keyword, launchTerm, reply)
 
 else:
@@ -28,34 +26,34 @@ else:
 
 		#simple #makeitrave
 		def test_makeitrave_1(self):
-			text="@cryptoraves #makeitrave"
+			text="@cryptoraves "+launchTerm
 			print("\n"+sys._getframe().f_code.co_name+": "+text)
 			response=parser.parse(text, keyword, launchTerm, False)
 			self.assertTrue(response['success'] and response['launch'])
 
 		def test_reply_makeitrave_1(self):
-			text="@cryptoraves #makeitrave"
+			text="@cryptoraves "+launchTerm
 			print("\n"+sys._getframe().f_code.co_name+": "+text)
 			response=parser.parse(text, keyword, launchTerm, True)
 			self.assertTrue(response['success'] and response['launch'])	
 
 		#make it rave complexity L2
 		def test_makeitrave_2(self):
-			text="Hey! @cryptoraves #makeitrave"
+			text="Hey! @cryptoraves "+launchTerm
 			print("\n"+sys._getframe().f_code.co_name+": "+text)
 			response=parser.parse(text, keyword, launchTerm, False)
 			self.assertTrue(response['success'] and response['launch'])
 
 		#make it rave complexity L3
 		def test_makeitrave_3(self):
-			text="Hey! check out this new dapp called @cryptoraves! tag em and tweet #makeitrave to get yours"
+			text="Hey! check out this new dapp called @cryptoraves! tag em and tweet "+launchTerm+" to get yours"
 			print("\n"+sys._getframe().f_code.co_name+": "+text)
 			response=parser.parse(text, keyword, launchTerm, False)
 			self.assertTrue(response['success'] and response['launch'])
 
 		#make it rave inReplyTo 
 		def test_makeitrave_3(self):
-			text="Have you heard of @cryptoraves? You can again #makeitrave and then send them some of YOUR PERSONAL tokens back to @crytporaves and you thye'll match ya 1 milllioooonn!!!!!!"
+			text="Have you heard of @cryptoraves? You can again "+launchTerm+" and then send them some of YOUR PERSONAL tokens back to @crytporaves and you thye'll match ya 1 milllioooonn!!!!!!"
 			print("\n"+sys._getframe().f_code.co_name+": "+text+ " -- reply")
 			response=parser.parse(text, keyword, launchTerm, True)
 			self.assertTrue(response['success'] and response['launch'])
@@ -80,7 +78,7 @@ else:
 			print("\n"+sys._getframe().f_code.co_name+": "+text)
 			response=parser.parse(text, keyword, launchTerm, False)
 			self.assertTrue("success" in response and response['success'] and response['results']['amount'] == 1999 \
-				and response['results']['onBehalfOf'] == '@saltyboi')
+				and response['results']['thirdPartyTokenUserHandle'] == '@saltyboi')
 
 		#simple reply
 		def test_reply_send_1(self):
@@ -99,14 +97,14 @@ else:
 			print("\n"+sys._getframe().f_code.co_name+": "+text)
 			response=parser.parse(text, keyword, launchTerm, False)
 			self.assertTrue("success" in response and response['success'] and response['results']['amount'] == 1999889 \
-				and response['results']['userTo'] == '@saltyboi' and 'onBehalfOf' not in response)
+				and response['results']['userTo'] == '@saltyboi' and 'thirdPartyTokenUserHandle' not in response)
 		def test_reply_send_3rdParty_1(self):
 			text="@cryptoraves 1,999,888 @saltyBoi @happyBae"
 			print("\n"+sys._getframe().f_code.co_name+": "+text)
 			response=parser.parse(text, keyword, launchTerm, False)
 			self.assertTrue(
 				"success" in response and response['success'] and response['results']['amount'] == 1999888 \
-				and response['results']['userTo'] == '@saltyboi' and response['results']['onBehalfOf'] == '@happybae' \
+				and response['results']['userTo'] == '@saltyboi' and response['results']['thirdPartyTokenUserHandle'] == '@happybae' \
 			)
 		#3rdParty with end of sentance
 		def test_reply_send_3rdParty_2(self):
@@ -115,7 +113,7 @@ else:
 			response=parser.parse(text, keyword, launchTerm, False)
 			self.assertTrue(
 				"success" in response and response['success'] and response['results']['amount'] == 1999888 \
-				and response['results']['userTo'] == '@saltyboi' and response['results']['onBehalfOf'] == '@happybae' \
+				and response['results']['userTo'] == '@saltyboi' and response['results']['thirdPartyTokenUserHandle'] == '@happybae' \
 			)
 		#3rdParty with emojis
 		def test_reply_send_3rdParty_4(self):
@@ -124,9 +122,33 @@ else:
 			response=parser.parse(text, keyword, launchTerm, False)
 			self.assertTrue(
 				"success" in response and response['success'] and response['results']['amount'] == 80000 \
-				and response['results']['userTo'] == '@m184392526' and response['results']['onBehalfOf'] == '@kingjames' \
+				and response['results']['userTo'] == '@m184392526' and response['results']['thirdPartyTokenUserHandle'] == '@kingjames' \
 			)
 
+		def test_nft_send_1(self):
+			text=u"@cryptoraves #MyCrypto 2123 @vestige"
+			print("\n"+sys._getframe().f_code.co_name+": "+text)
+			response=parser.parse(text, keyword, launchTerm, False)
+			self.assertTrue(
+				"success" in response and response['success'] and response['results']['tokenId'] == 2123 
+				and response['results']['nftHashtag'] == 'mycrypto' and response['results']['userTo'] == "@vestige"
+			)
+		def test_reply_nft_send_reply1(self):
+			text=u"@cryptoraves #MyCrypto 2123."
+			print("\n"+sys._getframe().f_code.co_name+": "+text)
+			response=parser.parse(text, keyword, launchTerm, True)
+			self.assertTrue(
+				"success" in response and response['success'] and response['results']['tokenId'] == 2123 
+				and response['results']['nftHashtag'] == 'mycrypto'  
+			)
+		def test_reply_nft_send_reply2(self):
+			text=u"@cryptoraves #MyCrypto 2123"
+			print("\n"+sys._getframe().f_code.co_name+": "+text)
+			response=parser.parse(text, keyword, launchTerm, True)
+			self.assertTrue(
+				"success" in response and response['success'] and response['results']['tokenId'] == 2123 
+				and response['results']['nftHashtag'] == 'mycrypto' 
+			)
 
 
 	if __name__ == '__main__':

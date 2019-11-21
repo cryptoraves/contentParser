@@ -39,6 +39,11 @@ def parseProcess(str, inReply):
 	if not arguments:
 		#empty string
 		return False;
+	
+	#check if starts with hashtag
+	nftHashtag=''
+	if arguments[0][0] == '#':
+		nftHashtag=arguments.pop(0)[1:]
 
 	#check if starts with digit
 	if not arguments[0][0].isdigit():
@@ -55,9 +60,16 @@ def parseProcess(str, inReply):
 	
 	if inReply and endOfSentance(arguments[0]):
 		#command is valid and complete replyToWithoutOBH.
-		return {
-		  "amount": amount		  
-		}
+		if nftHashtag:
+			return {
+			  "tokenId": amount,
+			  "nftHashtag":nftHashtag  
+			}
+		else:
+			return {
+			  "amount": amount,
+			  "thirdPartyTokenUserHandle":''	  
+			}
 
 	#second argument must be username
 	usernameOne=False
@@ -73,15 +85,28 @@ def parseProcess(str, inReply):
 	if inReply:
 		if usernameOne:
 			#command is valid and complete replyToWithOBH.
-			return {
-			  "amount": amount,
-			  "onBehalfOf":usernameOne	  
-			}
+			if nftHashtag:
+				return {
+				  "tokenId": amount,
+				  "nftHashtag":nftHashtag  
+				}
+			else:
+				return {
+				  "amount": amount,
+				  "thirdPartyTokenUserHandle":usernameOne	  
+				}
 		else:
 			#command is valid and complete replyToWithoutOBH.
-			return {
-			  "amount": amount		  
-			}
+			if nftHashtag:
+				return {
+				  "tokenId": amount,
+				  "nftHashtag":nftHashtag  
+				}
+			else:
+				return {
+				  "amount": amount,
+				  "thirdPartyTokenUserHandle":''	  
+				}
 
 	usernameTwo=False
 	if not sentanceEnd:
@@ -99,14 +124,22 @@ def parseProcess(str, inReply):
 			return {
 			  "amount": amount,
 			  "userTo": usernameOne,
-			  "onBehalfOf":usernameTwo	  
+			  "thirdPartyTokenUserHandle":usernameTwo	  
 			}
 		else:
 			#command is valid and complete with noReplyWithoutOBH.
-			return {
-			  "amount": amount,
-			  "userTo": usernameOne
-			}
+			if nftHashtag:
+				return {
+				  "userTo": usernameOne,
+				  "tokenId": amount,
+				  "nftHashtag":nftHashtag  
+				}
+			else:
+				return {
+				  "amount": amount,
+				  "userTo": usernameOne,
+				  "thirdPartyTokenUserHandle":''
+				}
 	
 
 def parse(text, keyword, launchTerm, inReply):
@@ -114,6 +147,7 @@ def parse(text, keyword, launchTerm, inReply):
 	keyword=keyword.lower()
 
 	if launchTerm.lower() in text.lower():
+		
 		#return to marketing command
 		return {
 			"success":True,
