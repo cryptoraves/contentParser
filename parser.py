@@ -57,7 +57,6 @@ def parseProcess(str, inReply):
 		n=n.strip(".")
 
 	amount = int(round(float(n)))
-	
 	if inReply and endOfSentance(arguments[0]):
 		#command is valid and complete replyToWithoutOBH.
 		if nftHashtag:
@@ -71,9 +70,10 @@ def parseProcess(str, inReply):
 			  "thirdPartyTokenUserHandle":''	  
 			}
 
-	#second argument must be username
+	#second argument must be username, unless its ticker
 	usernameOne=False
 	sentanceEnd=False
+	ticker=False
 	if len(arguments) > 1 and arguments[1].startswith('@'):
 		
 		if endOfSentance(arguments[1]):
@@ -81,6 +81,9 @@ def parseProcess(str, inReply):
 			sentanceEnd=True
 		else:
 			usernameOne=testUsername(arguments[1])
+	
+	if len(arguments) > 1 and arguments[1].startswith('$'):	
+			ticker=arguments[1].upper()
 
 	if inReply:
 		if usernameOne:
@@ -93,7 +96,8 @@ def parseProcess(str, inReply):
 			else:
 				return {
 				  "amount": amount,
-				  "thirdPartyTokenUserHandle":usernameOne	  
+				  "thirdPartyTokenUserHandle":usernameOne,
+			  		"ticker": ticker  
 				}
 		else:
 			#command is valid and complete replyToWithoutOBH.
@@ -105,7 +109,8 @@ def parseProcess(str, inReply):
 			else:
 				return {
 				  "amount": amount,
-				  "thirdPartyTokenUserHandle":''	  
+				  "thirdPartyTokenUserHandle":'',
+			  	  "ticker": ticker	  
 				}
 
 	usernameTwo=False
@@ -117,14 +122,18 @@ def parseProcess(str, inReply):
 				usernameTwo=testUsername(arguments[2][:-1])
 			else:
 				usernameTwo=testUsername(arguments[2])
-		
+
+		if len(arguments) > 2 and arguments[2].startswith('$'):	
+			ticker=arguments[2].upper()
+	print(usernameOne)
 	if usernameOne:
 		if usernameTwo:
 			#command is valid and complete with noReplyWithOBH.
 			return {
 			  "amount": amount,
 			  "userTo": usernameOne,
-			  "thirdPartyTokenUserHandle":usernameTwo	  
+			  "thirdPartyTokenUserHandle":usernameTwo,
+			  "ticker": ticker
 			}
 		else:
 			#command is valid and complete with noReplyWithoutOBH.
@@ -138,7 +147,8 @@ def parseProcess(str, inReply):
 				return {
 				  "amount": amount,
 				  "userTo": usernameOne,
-				  "thirdPartyTokenUserHandle":''
+				  "thirdPartyTokenUserHandle":'',
+			  	  "ticker": ticker
 				}
 	
 

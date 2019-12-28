@@ -17,7 +17,7 @@ def prettyParse(text, keyword, launchTerm, reply):
 #run it
 if "output" in sys.argv:
 
-	text="asdasda asdadds  asdasdas @cryptoraves #MyCrypto 2123 @vestige asdass"
+	text="nanananan @cryptoraves  3,010,888 @voldecker_21 $vya jijijijij"
 	prettyParse(text, keyword, launchTerm, reply)
 
 else:
@@ -149,7 +149,22 @@ else:
 				"success" in response and response['success'] and response['results']['tokenId'] == 2123 
 				and response['results']['nftHashtag'] == 'mycrypto' 
 			)
-
+		def test_ticker_reply(self):
+			text=u"@cryptoraves 1111 $VYA"
+			print("\n"+sys._getframe().f_code.co_name+": "+text)
+			response=parser.parse(text, keyword, launchTerm, True)
+			self.assertTrue(
+				"success" in response and response['success'] and response['results']['ticker'] == '$VYA' 
+				and response['results']['amount'] == 1111 
+			)
+		def test_ticker_reply(self):
+			text=u"nanananan @cryptoraves  3,010,888 @voldecker_21 $vya jijijijij"
+			print("\n"+sys._getframe().f_code.co_name+": "+text)
+			response=parser.parse(text, keyword, launchTerm, False)
+			self.assertTrue(
+				"success" in response and response['success'] and response['results']['ticker'] == '$VYA' 
+				and response['results']['amount'] == 3010888 and response['results']['userTo'] == '@voldecker_21' 
+			)
 
 	if __name__ == '__main__':
 		unittest.main()
