@@ -125,7 +125,7 @@ def parseProcess(str, inReply):
 
 		if len(arguments) > 2 and arguments[2].startswith('$'):	
 			ticker=arguments[2].upper()
-	print(usernameOne)
+
 	if usernameOne:
 		if usernameTwo:
 			#command is valid and complete with noReplyWithOBH.
