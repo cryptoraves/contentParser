@@ -17,6 +17,27 @@
 
 import re
 
+functionalTerms = {
+	'heresmyaddress',
+	'exporttoken'
+}
+
+def ethAddressValidation(address):
+	#1. check the 0x prefix of the hex address. If exists
+	try:
+		if address[:2] != '0x':
+			address = '0x'+address
+		if re.search("^0x[0-9a-fA-F]{40}$", address):
+			return address
+	except:
+		pass
+
+	return False
+
+	#2. Hash the lowercase hexadecimal string from Step-2 using Keccak 256 algorithm.
+	
+
+
 def endOfSentance(word):
 	return word.endswith((".","!","?"))
 
@@ -32,6 +53,19 @@ def testUsername(str):
 	else:
 		return False
 
+def determineFunctionality(hashtagTerm, arguments):
+	
+		if hashtagTerm == 'heresmyaddress':
+			#initiate address export
+			ethAddress = ethAddressValidation(arguments[0])
+			if ethAddress:
+				return {
+					'functional': hashtagTerm,
+					'ethAddress': ethAddress
+				}
+			else:
+				raise Exception('Invalid Eth Address provided for #HeresMyAddress')
+				
 def parseProcess(str, inReply):
 	
 	#run down word for word
@@ -44,6 +78,10 @@ def parseProcess(str, inReply):
 	nftHashtag=''
 	if arguments[0][0] == '#':
 		nftHashtag=arguments.pop(0)[1:]
+
+	#check if Cryptoraves function is being called
+	if nftHashtag in functionalTerms:
+		return determineFunctionality(nftHashtag, arguments)
 
 	#check if starts with digit
 	if not arguments[0][0].isdigit():

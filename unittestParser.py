@@ -12,13 +12,16 @@ reply=False
 #text="@cryptoraves is the newst coolest dapp in town. You can send your own personal crypto by tweeting: @cryptoraves 100.21. @yourfriend. Or if you're replying, it's simply @cryptoraves 1,000. If NOT replying you can send them like this: @cryptoraves 10 @newfriend"
 
 def prettyParse(text, keyword, launchTerm, reply):
-	print(json.dumps(parser.parse(text, keyword, launchTerm, reply), sort_keys=True, indent=4, separators=(',', ': ')))
+	response=parser.parse(text, keyword, launchTerm, reply)
+	print(json.dumps(response, sort_keys=True, indent=4, separators=(',', ': ')))
 
 #run it
 if "output" in sys.argv:
 
-	text="nanananan @cryptoraves  3,010,888 @voldecker_21 $vya jijijijij"
-	prettyParse(text, keyword, launchTerm, reply)
+	text="hunky dory @cryptoraves #heresmyaddress 0xC55C027d97Cac83bsD790aFf1943E48F86Abb2254 yes"
+	response=prettyParse(text, keyword, launchTerm, reply)
+
+
 
 else:
 	import unittest
@@ -157,7 +160,7 @@ else:
 				"success" in response and response['success'] and response['results']['ticker'] == '$VYA' 
 				and response['results']['amount'] == 1111 
 			)
-		def test_ticker_reply(self):
+		def test_ticker_reply2(self):
 			text=u"nanananan @cryptoraves  3,010,888 @voldecker_21 $vya jijijijij"
 			print("\n"+sys._getframe().f_code.co_name+": "+text)
 			response=parser.parse(text, keyword, launchTerm, False)
@@ -165,6 +168,28 @@ else:
 				"success" in response and response['success'] and response['results']['ticker'] == '$VYA' 
 				and response['results']['amount'] == 3010888 and response['results']['userTo'] == '@voldecker_21' 
 			)
+		def test_functional_1_heresMyAddress_pass(self):
+			text=u"hunky dory @cryptoraves #heresmyaddress 0xC55C027d97Cac83bD790aFf1943E48F86Abb2254 yes"
+			response=parser.parse(text, keyword, launchTerm, False)
+			self.assertTrue(
+				"success" in response and response['success'] and 
+				response['results']['ethAddress'] == '0xc55c027d97cac83bd790aff1943e48f86abb2254' and 
+				response['results']['functional'] == 'heresmyaddress'
+			)
+		def test_functional_test_2_heresMyAddress_fail(self):
+			text=u"@cryptoraves #heresmyaddress 0xC55C027d97Cac83sbD79s0aFf1943E48F86Abb2254 @motionocean versatile fentanyl"
+			response1=parser.parse(text, keyword, launchTerm, False)
+			text=u"hunky dory @cryptoraves #heresmyaddress 0xC55C027d97Cac8379s0aFf1943E48F86Abb2254 yes"
+			response2=parser.parse(text, keyword, launchTerm, True)
+			text=u"hunky dory @cryptoraves #heresmyaddress 0xC55C027d97Cac83bD79s0aaaaaFf1943E48F86Abb2254 yes"
+			response3=parser.parse(text, keyword, launchTerm, False)
+			print(response3)
+			self.assertTrue(
+				"error" in response1 and response1['error'] == "Invalid Eth Address provided for #HeresMyAddress" and 
+				"error" in response2 and response2['error'] == "Invalid Eth Address provided for #HeresMyAddress" and
+				"error" in response3 and response3['error'] == "Invalid Eth Address provided for #HeresMyAddress" 
+			)
+
 
 	if __name__ == '__main__':
 		unittest.main()
