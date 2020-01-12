@@ -18,7 +18,7 @@ def prettyParse(text, keyword, launchTerm, reply):
 #run it
 if "output" in sys.argv:
 
-	text="hunky dory @cryptoraves #heresmyaddress 0xC55C027d97Cac83bsD790aFf1943E48F86Abb2254 yes"
+	text="hunky dory @cryptoraves #heresmyaddress 0xC55C027d97Cac83bD790aFf1943E48F86Abb2254 yes"
 	response=prettyParse(text, keyword, launchTerm, reply)
 
 
