@@ -19,7 +19,7 @@ import re
 
 functionalTerms = {
 	'heresmyaddress',
-	'exporttoken'
+	'exporttokens'
 }
 
 def ethAddressValidation(address):
@@ -54,18 +54,34 @@ def testUsername(str):
 		return False
 
 def determineFunctionality(hashtagTerm, arguments):
-	
-		if hashtagTerm == 'heresmyaddress':
-			#initiate address export
-			ethAddress = ethAddressValidation(arguments[0])
-			if ethAddress:
-				return {
-					'functional': hashtagTerm,
-					'ethAddress': ethAddress
-				}
-			else:
-				raise Exception('Invalid Eth Address provided for #HeresMyAddress')
-				
+		
+	if hashtagTerm == 'heresmyaddress':
+		#initiate address export
+		ethAddress = ethAddressValidation(arguments[0])
+		if ethAddress:
+			return {
+				'functional': hashtagTerm,
+				'ethAddress': ethAddress
+			}
+		else:
+			raise Exception('Invalid Eth Address provided for #HeresMyAddress')
+
+	if hashtagTerm == 'exporttokens':
+		if len(arguments) < 2:
+			raise Exception('Invalid number of params for #exporttokens attempt')
+		res = parseProcess(arguments[0]+' '+arguments[1], True)
+		
+		if not res:
+			raise Exception('Invalid params given for #exporttokens attempt')
+
+		else:
+			return {
+				'functional': hashtagTerm,
+				'amount': res['amount'],
+				'ticker': res['ticker']
+			}
+		
+	return False
 def parseProcess(str, inReply):
 	
 	#run down word for word
