@@ -110,7 +110,7 @@ def parseProcess(str, inReply):
 	if n.endswith("."):
 		n=n.strip(".")
 
-	amount = int(round(float(n)))
+	amount = float(n)
 	if inReply and endOfSentance(arguments[0]):
 		#command is valid and complete replyToWithoutOBH.
 		if nftHashtag:
