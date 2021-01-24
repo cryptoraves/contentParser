@@ -99,7 +99,7 @@ else:
 			text="@cryptoraves 1,999,888.51 @saltyBoi. @happyBae does the nay nay"
 			print("\n"+sys._getframe().f_code.co_name+": "+text)
 			response=parser.parse(text, keyword, launchTerm, False)
-			self.assertTrue("success" in response and response['success'] and response['results']['amount'] == 1999889 \
+			self.assertTrue("success" in response and response['success'] and response['results']['amount'] == 1999888.51 \
 				and response['results']['userTo'] == '@saltyboi' and 'thirdPartyTokenUserHandle' not in response)
 		def test_reply_send_3rdParty_1(self):
 			text="@cryptoraves 1,999,888 @saltyBoi @happyBae"
@@ -124,7 +124,7 @@ else:
 			print("\n"+sys._getframe().f_code.co_name+": "+text)
 			response=parser.parse(text, keyword, launchTerm, False)
 			self.assertTrue(
-				"success" in response and response['success'] and response['results']['amount'] == 80000 \
+				"success" in response and response['success'] and response['results']['amount'] == 80000.22 \
 				and response['results']['userTo'] == '@m184392526' and response['results']['thirdPartyTokenUserHandle'] == '@kingjames' \
 			)
 
